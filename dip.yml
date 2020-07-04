@@ -1,0 +1,35 @@
+version: '4'
+
+compose:
+  files:
+    - docker-compose.yml
+
+interaction:
+  bash:
+    description: Open the Bash shell in app's container
+    service: ruby
+    command: /bin/bash
+
+  pry:
+    description: Open Pry console
+    service: ruby
+    command: ./bin/console
+
+  bundle:
+    description: Run Bundler commands
+    service: ruby
+    command: bundle
+
+  rspec:
+    description: Run Rspec commands
+    service: ruby
+    command: bundle exec rspec
+
+  rubocop:
+    description: Run Rubocop commands
+    service: ruby
+    command: bundle exec rubocop
+
+provision:
+  - rm -f Gemfile.lock
+  - dip bash -c "bin/setup"

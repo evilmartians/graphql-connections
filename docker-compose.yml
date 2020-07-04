@@ -1,0 +1,33 @@
+version: '2.4'
+
+services:
+  ruby:
+    image: ruby:${RUBY_IMAGE:-2.6}
+    environment:
+      - HISTFILE=/app/tmp/.bash_history
+      - BUNDLE_PATH=/bundle
+      - BUNDLE_CONFIG=/app/.bundle/config
+      - DATABASE_URL=postgres://postgres:@postgres:5432
+    command: bash
+    working_dir: /app
+    volumes:
+      - .:/app:cached
+      - bundler_data:/bundle
+    tmpfs:
+      - /tmp
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:12
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5432
+    healthcheck:
+      test: pg_isready -U postgres -h 127.0.0.1
+      interval: 10s
+
+volumes:
+  bundler_data:
