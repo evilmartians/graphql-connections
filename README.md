@@ -37,7 +37,7 @@ Or you can apply a stable connection to all Active Record relations returning by
 class ApplicationSchema < GraphQL::Schema
   use GraphQL::Pagination::Connections
 
-  connections.add(ActiveRecord::Relation, GraphQL::Connections::StableConnection)
+  connections.add(ActiveRecord::Relation, GraphQL::Connections::Stable)
 end
 ```
 
