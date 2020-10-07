@@ -3,16 +3,16 @@
 require "spec_helper"
 
 describe GraphQL::Connections::Stable do
-  let_it_be(:msg_a) { Message.create!(body: "A") }
-  let_it_be(:msg_b) { Message.create!(body: "B") }
-  let_it_be(:msg_c) { Message.create!(body: "C") }
-  let_it_be(:msg_d) { Message.create!(body: "D") }
-  let_it_be(:msg_e) { Message.create!(body: "E") }
+  let_it_be(:msg_a) { Message.create!(body: "A", created_at: Time.local(2020, 10, 2, 15)) }
+  let_it_be(:msg_b) { Message.create!(body: "B", created_at: Time.local(2020, 10, 2, 14)) }
+  let_it_be(:msg_c) { Message.create!(body: "C", created_at: Time.local(2020, 10, 2, 13)) }
+  let_it_be(:msg_d) { Message.create!(body: "D", created_at: Time.local(2020, 10, 2, 12)) }
+  let_it_be(:msg_e) { Message.create!(body: "E", created_at: Time.local(2020, 10, 2, 11)) }
 
   let(:schema) { ApplicationSchema }
   let(:context) { instance_double(GraphQL::Query::Context, schema: schema) }
   let(:relation) { Message.all }
-  let(:base_connection) { described_class.new([], context: context) }
+  let(:base_connection) { described_class.new(Message.none, context: context) }
   let(:connection) { described_class.new(relation, context: context, **params) }
   let(:nodes) { connection.nodes }
   let(:names) { nodes.map(&:body) }
@@ -170,6 +170,46 @@ describe GraphQL::Connections::Stable do
       expect(names).to eq %w[C D]
       expect(connection.has_previous_page).to be true
       expect(connection.has_next_page).to be true
+    end
+  end
+
+  context "when primary is Time" do
+    let(:base_connection) { described_class.new(Message.none, primary_key: :created_at, context: context) }
+    let(:connection) { described_class.new(relation, primary_key: :created_at, context: context, **params) }
+
+    describe ":after, :before, :first, and :last params" do
+      let(:params) do
+        {after: base_connection.cursor_for(msg_d), before: base_connection.cursor_for(msg_a), first: 1, last: 1}
+      end
+
+      it "returns first and last nodes after B and before E" do
+        expect(nodes.size).to eq 2
+        expect(names).to eq %w[C B]
+        expect(connection.has_previous_page).to be true
+        expect(connection.has_next_page).to be true
+      end
+    end
+
+    context "and cursor is not opaque" do
+      let(:base_connection) do
+        described_class.new(Message.none, primary_key: :created_at, opaque_cursor: false, context: context)
+      end
+      let(:connection) do
+        described_class.new(relation, primary_key: :created_at, opaque_cursor: false, context: context, **params)
+      end
+
+      describe ":after, :before, :first, and :last params" do
+        let(:params) do
+          {after: "2020-10-02 12:00:00", before: "2020-10-02 15:00:00", first: 1, last: 1}
+        end
+
+        it "returns first and last nodes after B and before E" do
+          expect(nodes.size).to eq 2
+          expect(names).to eq %w[C B]
+          expect(connection.has_previous_page).to be true
+          expect(connection.has_next_page).to be true
+        end
+      end
     end
   end
 end

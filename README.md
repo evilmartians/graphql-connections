@@ -31,6 +31,18 @@ def messages
 end
 ```
 
+Records are sorted by model's primary key by default. You can change this behaviour by providing `primary_key` param:
+
+```ruby
+GraphQL::Connections::Stable.new(Message.all, primary_key: :created_at)
+```
+
+Also, you can disable opaque cursors by setting `opaque_cursor` param:
+
+```ruby
+GraphQL::Connections::Stable.new(Message.all, opaque_cursor: false)
+```
+
 Or you can apply a stable connection to all Active Record relations returning by any field:
 
 ```ruby
