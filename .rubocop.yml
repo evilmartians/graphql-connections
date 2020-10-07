@@ -4,6 +4,7 @@ AllCops:
     - tmp/**/*
     - gemfiles/*
   TargetRubyVersion: 2.5
+  NewCops: enable
 
 Documentation:
   Enabled: false
@@ -15,9 +16,9 @@ Metrics/BlockLength:
     - spec/**/*
 
 Metrics/MethodLength:
-  Max: 14
+  Max: 20
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
 Metrics/ClassLength:
@@ -28,9 +29,6 @@ Metrics/ParameterLists:
 
 Metrics/AbcSize:
   Max: 35
-
-Metrics/MethodLength:
-  Max: 20
 
 Style/FormatString:
   Enabled: false

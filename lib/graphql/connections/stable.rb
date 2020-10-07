@@ -12,8 +12,20 @@ module GraphQL
     # For more information see GraphQL Cursor Connections Specification
     # https://relay.dev/graphql/connections.htm
     class Stable < ::GraphQL::Pagination::Connection
+      attr_reader :opaque_cursor
+
       delegate :arel_table, to: :items
-      delegate :primary_key, to: "items.model"
+
+      def initialize(*args, primary_key: nil, opaque_cursor: true, **kwargs)
+        @primary_key = primary_key
+        @opaque_cursor = opaque_cursor
+
+        super(*args, **kwargs)
+      end
+
+      def primary_key
+        @primary_key ||= items.model.primary_key
+      end
 
       def nodes
         @nodes ||= limited_relation
@@ -21,7 +33,7 @@ module GraphQL
 
       def has_previous_page # rubocop:disable Naming/PredicateName
         if last
-          nodes.any? && items.where(arel_table[primary_key].lt(nodes.first.id)).exists?
+          nodes.any? && items.where(arel_table[primary_key].lt(nodes.first[primary_key])).exists?
         elsif after
           items.where(arel_table[primary_key].lteq(after_cursor)).exists?
         else
@@ -31,7 +43,7 @@ module GraphQL
 
       def has_next_page # rubocop:disable Naming/PredicateName
         if first
-          nodes.any? && items.where(arel_table[primary_key].gt(nodes.last.id)).exists?
+          nodes.any? && items.where(arel_table[primary_key].gt(nodes.last[primary_key])).exists?
         elsif before
           items.where(arel_table[primary_key].gteq(before_cursor)).exists?
         else
@@ -40,10 +52,21 @@ module GraphQL
       end
 
       def cursor_for(item)
-        encode(item.id.to_s)
+        cursor = serialize(item[primary_key])
+        cursor = encode(cursor) if opaque_cursor
+        cursor
       end
 
       private
+
+      def serialize(cursor)
+        case cursor
+        when Time, DateTime, Date
+          cursor.iso8601
+        else
+          cursor.to_s
+        end
+      end
 
       def limited_relation
         scope = sliced_relation
@@ -73,11 +96,11 @@ module GraphQL
       end
 
       def after_cursor
-        @after_cursor ||= decode(after)
+        @after_cursor ||= opaque_cursor ? decode(after) : after
       end
 
       def before_cursor
-        @before_cursor ||= decode(before)
+        @before_cursor ||= opaque_cursor ? decode(before) : before
       end
     end
   end
