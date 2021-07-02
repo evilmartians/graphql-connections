@@ -9,3 +9,5 @@ module GraphQL
 end
 
 require "graphql/connections/stable"
+require "graphql/connections/keyset_asc"
+require "graphql/connections/keyset_desc"
