@@ -37,6 +37,28 @@ Records are sorted by model's primary key by default. You can change this behavi
 GraphQL::Connections::Stable.new(Message.all, primary_key: :created_at)
 ```
 
+In case when you want records to be sorted by more than one field (i.e., _keyset pagination_), you can use `keys` param:
+
+```ruby
+GraphQL::Connections::Stable.new(Message.all, keys: %w[name id])
+```
+
+When you pass only one key, a primary key will be added as a second one:
+
+```ruby
+GraphQL::Connections::Stable.new(Message.all, keys: [:name])
+```
+
+**NOTE:** Currently we support maximum two keys in the keyset.
+
+Also, you can pass the `:desc` option to reverse the relation:
+
+```ruby
+GraphQL::Connections::Stable.new(Message.all, keys: %w[name id], desc: true)
+```
+
+**NOTE:** `:desc` option is not implemented for stable connections with `:primary_key` passed; if you need it—use keyset pagination or implement `:desc` option for us 🙂.
+
 Also, you can disable opaque cursors by setting `opaque_cursor` param:
 
 ```ruby
@@ -53,7 +75,7 @@ class ApplicationSchema < GraphQL::Schema
 end
 ```
 
-**NOTE:** Don't use stable connections for relations whose ordering is too complicated for cursor generation. 
+**NOTE:** Don't use stable connections for relations whose ordering is too complicated for cursor generation.
 
 ## Development
 

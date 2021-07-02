@@ -8,9 +8,8 @@ module GraphQL
 
         SEPARATOR = '/'
 
-        def initialize(*args, field_key: nil, primary_key: nil, separator: SEPARATOR, **kwargs)
-          @primary_key = primary_key
-          @field_key = field_key
+        def initialize(*args, keys:, separator: SEPARATOR, **kwargs)
+          @field_key, @primary_key = keys
           @separator = separator
 
           super(*args, **kwargs)
@@ -25,9 +24,9 @@ module GraphQL
         private
 
         def sliced_relation
-          items
-            .yield_self { |s| after ? sliced_relation_after(s) : s }
-            .yield_self { |s| before ? sliced_relation_before(s) : s }
+          items.
+            yield_self { |s| after ? sliced_relation_after(s) : s }.
+            yield_self { |s| before ? sliced_relation_before(s) : s }
         end
 
         def after_cursor_date

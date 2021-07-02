@@ -12,8 +12,8 @@ describe GraphQL::Connections::Keyset::Asc do
   let(:schema) { ApplicationSchema }
   let(:context) { instance_double(GraphQL::Query::Context, schema: schema) }
   let(:relation) { Message.all }
-  let(:base_connection) { described_class.new(Message.none, field_key: :body, context: context) }
-  let(:connection) { described_class.new(relation, field_key: :body, context: context, **params) }
+  let(:base_connection) { described_class.new(Message.none, keys: [:body], context: context) }
+  let(:connection) { described_class.new(relation, keys: [:body], context: context, **params) }
   let(:nodes) { connection.nodes }
   let(:names) { nodes.map(&:body) }
 
