@@ -11,24 +11,11 @@ module GraphQL
     #
     # For more information see GraphQL Cursor Connections Specification
     # https://relay.dev/graphql/connections.htm
-    class Stable < ::GraphQL::Pagination::Connection
-      attr_reader :opaque_cursor
-
-      delegate :arel_table, to: :items
-
-      def initialize(*args, primary_key: nil, opaque_cursor: true, **kwargs)
+    class Stable < ::GraphQL::Connections::Base
+      def initialize(*args, primary_key: nil, **kwargs)
         @primary_key = primary_key
-        @opaque_cursor = opaque_cursor
 
         super(*args, **kwargs)
-      end
-
-      def primary_key
-        @primary_key ||= items.model.primary_key
-      end
-
-      def nodes
-        @nodes ||= limited_relation
       end
 
       def has_previous_page # rubocop:disable Naming/PredicateName
@@ -59,15 +46,6 @@ module GraphQL
 
       private
 
-      def serialize(cursor)
-        case cursor
-        when Time, DateTime, Date
-          cursor.iso8601
-        else
-          cursor.to_s
-        end
-      end
-
       def limited_relation
         scope = sliced_relation
         nodes = []
@@ -93,14 +71,6 @@ module GraphQL
         items
           .yield_self { |s| after ? s.where(arel_table[primary_key].gt(after_cursor)) : s }
           .yield_self { |s| before ? s.where(arel_table[primary_key].lt(before_cursor)) : s }
-      end
-
-      def after_cursor
-        @after_cursor ||= opaque_cursor ? decode(after) : after
-      end
-
-      def before_cursor
-        @before_cursor ||= opaque_cursor ? decode(before) : before
       end
     end
   end
