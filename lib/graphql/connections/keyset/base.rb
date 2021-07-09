@@ -3,10 +3,11 @@
 module GraphQL
   module Connections
     module Keyset
+      # Base class for keyset pagination implementations
       class Base < ::GraphQL::Connections::Base
         attr_reader :field_key
 
-        SEPARATOR = '/'
+        SEPARATOR = "/"
 
         def initialize(*args, keys:, separator: SEPARATOR, **kwargs)
           @field_key, @primary_key = keys
@@ -24,9 +25,9 @@ module GraphQL
         private
 
         def sliced_relation
-          items.
-            yield_self { |s| after ? sliced_relation_after(s) : s }.
-            yield_self { |s| before ? sliced_relation_before(s) : s }
+          items
+            .yield_self { |s| after ? sliced_relation_after(s) : s }
+            .yield_self { |s| before ? sliced_relation_before(s) : s }
         end
 
         def after_cursor_date

@@ -2,6 +2,7 @@
 
 module GraphQL
   module Connections
+    # Base class for pagination implementations
     class Base < ::GraphQL::Pagination::Connection
       attr_reader :opaque_cursor
 

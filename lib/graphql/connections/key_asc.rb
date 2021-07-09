@@ -2,6 +2,7 @@
 
 module GraphQL
   module Connections
+    # Implements pagination by one field with asc order
     class KeyAsc < ::GraphQL::Connections::Base
       def initialize(*args, primary_key: nil, **kwargs)
         @primary_key = primary_key
@@ -9,7 +10,7 @@ module GraphQL
         super(*args, **kwargs)
       end
 
-      def has_previous_page # rubocop:disable Naming/PredicateName
+      def has_previous_page # rubocop:disable Naming/PredicateName, Metrics/AbcSize
         if last
           nodes.any? && items.where(arel_table[primary_key].lt(nodes.first[primary_key])).exists?
         elsif after
@@ -19,7 +20,7 @@ module GraphQL
         end
       end
 
-      def has_next_page # rubocop:disable Naming/PredicateName
+      def has_next_page # rubocop:disable Naming/PredicateName, Metrics/AbcSize
         if first
           nodes.any? && items.where(arel_table[primary_key].gt(nodes.last[primary_key])).exists?
         elsif before
@@ -37,31 +38,31 @@ module GraphQL
 
       private
 
-      def limited_relation
+      def limited_relation # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         scope = sliced_relation
         nodes = []
 
         if first
-          nodes |= scope.
-                   reorder(arel_table[primary_key].asc).
-                   limit(first).
-                   to_a
+          nodes |= scope
+            .reorder(arel_table[primary_key].asc)
+            .limit(first)
+            .to_a
         end
 
         if last
-          nodes |= scope.
-                   reorder(arel_table[primary_key].desc).
-                   limit(last).
-                   to_a.reverse!
+          nodes |= scope
+            .reorder(arel_table[primary_key].desc)
+            .limit(last)
+            .to_a.reverse!
         end
 
         nodes
       end
 
-      def sliced_relation
-        items.
-          yield_self { |s| after ? s.where(arel_table[primary_key].gt(after_cursor)) : s }.
-          yield_self { |s| before ? s.where(arel_table[primary_key].lt(before_cursor)) : s }
+      def sliced_relation # rubocop:disable Metrics/AbcSize
+        items
+          .yield_self { |s| after ? s.where(arel_table[primary_key].gt(after_cursor)) : s }
+          .yield_self { |s| before ? s.where(arel_table[primary_key].lt(before_cursor)) : s }
       end
     end
   end
