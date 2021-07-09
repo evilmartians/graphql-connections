@@ -73,26 +73,26 @@ module GraphQL
         nodes = []
 
         if first
-          nodes |= scope.
-                   reorder(arel_table[primary_key].asc).
-                   limit(first).
-                   to_a
+          nodes |= scope
+            .reorder(arel_table[primary_key].asc)
+            .limit(first)
+            .to_a
         end
 
         if last
-          nodes |= scope.
-                   reorder(arel_table[primary_key].desc).
-                   limit(last).
-                   to_a.reverse!
+          nodes |= scope
+            .reorder(arel_table[primary_key].desc)
+            .limit(last)
+            .to_a.reverse!
         end
 
         nodes
       end
 
       def sliced_relation
-        items.
-          yield_self { |s| after ? s.where(arel_table[primary_key].gt(after_cursor)) : s }.
-          yield_self { |s| before ? s.where(arel_table[primary_key].lt(before_cursor)) : s }
+        items
+          .yield_self { |s| after ? s.where(arel_table[primary_key].gt(after_cursor)) : s }
+          .yield_self { |s| before ? s.where(arel_table[primary_key].lt(before_cursor)) : s }
       end
 
       def after_cursor
