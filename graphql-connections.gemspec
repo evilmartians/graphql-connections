@@ -6,14 +6,14 @@ require "graphql/connections/version"
 
 # rubocop:disable Metrics/BlockLength
 Gem::Specification.new do |spec|
-  spec.name          = "graphql-connections"
-  spec.version       = GraphQL::Paging::VERSION
-  spec.authors       = ["Misha Merkushin"]
-  spec.email         = ["merkushin.m.s@gmail.com"]
+  spec.name = "graphql-connections"
+  spec.version = GraphQL::Paging::VERSION
+  spec.authors = ["Misha Merkushin"]
+  spec.email = ["merkushin.m.s@gmail.com"]
 
-  spec.summary       = "GraphQL cursor-based stable pagination to work with Active Record relations"
-  spec.homepage      = "https://github.com/bibendi/graphql-connections"
-  spec.license       = "MIT"
+  spec.summary = "GraphQL cursor-based stable pagination to work with Active Record relations"
+  spec.homepage = "https://github.com/bibendi/graphql-connections"
+  spec.license = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
@@ -25,9 +25,9 @@ Gem::Specification.new do |spec|
   end
 
   # Specify which files should be added to the gem when it is released.
-  spec.files = Dir.glob("lib/**/*") + %w(LICENSE.txt README.md)
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.files = Dir.glob("lib/**/*") + %w[LICENSE.txt README.md]
+  spec.bindir = "exe"
+  spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
   spec.required_ruby_version = "> 2.5"
 
