@@ -95,6 +95,7 @@ field :messages, Types::Message.connection_type, null: false
 def messages
   CitiesIndex.query(match: {name: "Moscow"})
 end
+```
 
 **NOTE:** Using `first` and `last`arguments simultaneously is not supported yet.
 
