@@ -2,10 +2,11 @@ services:
   ruby:
     image: ruby:${RUBY_IMAGE:-3.0}-buster
     environment:
-      - HISTFILE=/app/tmp/.bash_history
-      - BUNDLE_PATH=/bundle
-      - BUNDLE_CONFIG=/app/.bundle/config
-      - DATABASE_URL=postgres://postgres:@postgres:5432
+      HISTFILE: /app/.bash_history
+      BUNDLE_PATH: /bundle
+      BUNDLE_CONFIG: /app/.bundle/config
+      DATABASE_URL: postgres://postgres:@postgres:5432
+      ELASTICSEARCH_URL: http://elasticsearch:9200
     command: bash
     working_dir: /app
     volumes:
@@ -15,6 +16,8 @@ services:
       - /tmp
     depends_on:
       postgres:
+        condition: service_healthy
+      elasticsearch:
         condition: service_healthy
 
   postgres:
@@ -26,6 +29,19 @@ services:
     healthcheck:
       test: pg_isready -U postgres -h 127.0.0.1
       interval: 10s
+
+  elasticsearch:
+    image: elasticsearch:7.12.1
+    ports:
+      - 9200:9200
+    environment:
+      ES_JAVA_OPTS: -Xms64m -Xmx256m
+      discovery.type: single-node
+      http.cors.enabled: "true"
+      bootstrap.memory_lock: "true"
+    healthcheck:
+      test: curl --silent --fail 0.0.0.0:9200/_cluster/health
+      interval: 30s
 
 volumes:
   bundler_data:

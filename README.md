@@ -21,6 +21,8 @@ gem "graphql-connections"
 
 ## Usage
 
+### ActiveRecord
+
 You can use a stable connection wrapper on a specific field:
 
 ```ruby
@@ -69,13 +71,32 @@ Or you can apply a stable connection to all Active Record relations returning by
 
 ```ruby
 class ApplicationSchema < GraphQL::Schema
-  use GraphQL::Pagination::Connections
-
   connections.add(ActiveRecord::Relation, GraphQL::Connections::Stable)
 end
 ```
 
 **NOTE:** Don't use stable connections for relations whose ordering is too complicated for cursor generation.
+
+### Elasticsearch via Chewy
+
+Register connection for all Chewy requests:
+
+```ruby
+class ApplicationSchema < GraphQL::Schema
+  connections.add(Chewy::Search::Request, GraphQL::Connections::ChewyConnection)
+end
+```
+
+And define field like below:
+
+```ruby
+field :messages, Types::Message.connection_type, null: false
+
+def messages
+  CitiesIndex.query(match: {name: "Moscow"})
+end
+
+**NOTE:** Using `first` and `last`arguments simultaneously is not supported yet.
 
 ## Development
 

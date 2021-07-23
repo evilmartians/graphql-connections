@@ -9,6 +9,7 @@
 /tmp/
 .pry_history
 .rspec_status
+*_history
 Gemfile.lock
 .lefthook-local/
 lefthook-local.yml

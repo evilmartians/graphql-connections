@@ -16,3 +16,5 @@ require "graphql/connections/key_asc"
 require "graphql/connections/keyset/base"
 require "graphql/connections/keyset/asc"
 require "graphql/connections/keyset/desc"
+
+require "graphql/connections/chewy"
