@@ -3,10 +3,7 @@
 
 # GraphQL::Connections
 
-Cursor-based pagination to work with `ActiveRecord::Relation`s.
-
-Implements [Relay specification](https://relay.dev/graphql/connections.htm) for serving stable connections based on column values.
-If objects are created or destroyed during pagination, the list of items won’t be disrupted.
+Additional implementations of cursor-based paginations for [GraphQL Ruby](https://graphql-ruby.org/).
 
 <a href="https://evilmartians.com/?utm_source=graphql-connections">
 <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Sponsored by Evil Martians" width="236" height="54"></a>
@@ -22,6 +19,9 @@ gem "graphql-connections"
 ## Usage
 
 ### ActiveRecord
+
+Implements [Relay specification](https://relay.dev/graphql/connections.htm) for serving stable connections based on column values.
+If objects are created or destroyed during pagination, the list of items won’t be disrupted.
 
 You can use a stable connection wrapper on a specific field:
 
