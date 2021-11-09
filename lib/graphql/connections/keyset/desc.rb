@@ -45,12 +45,6 @@ module GraphQL
         end
         # rubocop:enable Naming/PredicateName, Metrics/AbcSize, Metrics/MethodLength
 
-        def cursor_for(item)
-          cursor = [item[field_key], item[primary_key]].map { |value| serialize(value) }.join(@separator)
-          cursor = encode(cursor) if opaque_cursor
-          cursor
-        end
-
         private
 
         def limited_relation # rubocop:disable Metrics/AbcSize, Metrics/MethodLength

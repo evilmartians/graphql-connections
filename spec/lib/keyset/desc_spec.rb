@@ -10,10 +10,10 @@ describe GraphQL::Connections::Keyset::Desc do
   let_it_be(:msg_e) { Message.create!(body: "E", created_at: Time.local(2020, 10, 2, 11)) }
 
   let(:schema) { ApplicationSchema }
-  let(:context) { instance_double(GraphQL::Query::Context, schema: schema) }
+  let(:query_context) { instance_double(GraphQL::Query::Context, schema: schema) }
   let(:relation) { Message.all }
-  let(:base_connection) { described_class.new(Message.none, keys: [:body], context: context) }
-  let(:connection) { described_class.new(relation, keys: [:body], context: context, **params) }
+  let(:base_connection) { described_class.new(Message.none, keys: [:body], context: query_context) }
+  let(:connection) { described_class.new(relation, keys: [:body], context: query_context, **params) }
   let(:nodes) { connection.nodes }
   let(:names) { nodes.map(&:body) }
 
@@ -53,7 +53,7 @@ describe GraphQL::Connections::Keyset::Desc do
   describe ":after param" do
     let(:params) { {after: base_connection.cursor_for(msg_d)} }
 
-    it "returns default_max_page_size nodes after B" do
+    it "returns default_max_page_size nodes after D" do
       expect(nodes.size).to eq 3
       expect(names).to eq %w[C B A]
       expect(connection.has_previous_page).to be true
@@ -64,7 +64,7 @@ describe GraphQL::Connections::Keyset::Desc do
   describe ":before param" do
     let(:params) { {before: base_connection.cursor_for(msg_b)} }
 
-    it "returns default_max_page_size nodes before D" do
+    it "returns default_max_page_size nodes before B" do
       expect(nodes.size).to eq 3
       expect(names).to eq %w[E D C]
       expect(connection.has_previous_page).to be false
@@ -75,7 +75,7 @@ describe GraphQL::Connections::Keyset::Desc do
   describe ":after and :first params" do
     let(:params) { {after: base_connection.cursor_for(msg_d), first: 2} }
 
-    it "returns two nodes after B" do
+    it "returns two nodes after D" do
       expect(nodes.size).to eq 2
       expect(names).to eq %w[C B]
       expect(connection.has_previous_page).to be true

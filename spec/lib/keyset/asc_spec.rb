@@ -10,10 +10,10 @@ describe GraphQL::Connections::Keyset::Asc do
   let_it_be(:msg_e) { Message.create!(body: "E", created_at: Time.local(2020, 10, 2, 11)) }
 
   let(:schema) { ApplicationSchema }
-  let(:context) { instance_double(GraphQL::Query::Context, schema: schema) }
+  let(:query_context) { instance_double(GraphQL::Query::Context, schema: schema) }
   let(:relation) { Message.all }
-  let(:base_connection) { described_class.new(Message.none, keys: [:body], context: context) }
-  let(:connection) { described_class.new(relation, keys: [:body], context: context, **params) }
+  let(:base_connection) { described_class.new(Message.none, keys: [:body], context: query_context) }
+  let(:connection) { described_class.new(relation, keys: [:body], context: query_context, **params) }
   let(:nodes) { connection.nodes }
   let(:names) { nodes.map(&:body) }
 
