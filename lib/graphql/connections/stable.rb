@@ -14,9 +14,8 @@ module GraphQL
     module Stable
       def self.new(*args, desc: false, keys: nil, **kwargs)
         if kwargs[:primary_key] || keys.nil?
-          raise NotImplementedError, "desc connection is not implemented yet" if desc
-
-          return GraphQL::Connections::KeyAsc.new(*args, **kwargs)
+          klass = desc ? GraphQL::Connections::Key::Desc : GraphQL::Connections::Key::Asc
+          return klass.new(*args, **kwargs)
         end
 
         raise ArgumentError, "keyset for more that 2 keys is not implemented yet" if keys.length > 2

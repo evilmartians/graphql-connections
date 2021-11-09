@@ -15,9 +15,9 @@ describe GraphQL::Connections::Stable do
     context "when desc is true" do
       let(:desc) { true }
 
-      it "raises NotImplementedError" do
-        expect { subject }.to raise_error(NotImplementedError)
-      end
+      it { is_expected.to be_a(GraphQL::Connections::Key::Asc) }
+
+      it { is_expected.to have_attributes(primary_key: primary_key) }
     end
   end
 
