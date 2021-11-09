@@ -22,11 +22,11 @@ module GraphQL
         @nodes ||= limited_relation
       end
 
-      def has_previous_page # rubocop:disable Naming/PredicateName
+      def has_previous_page
         raise NotImplementedError
       end
 
-      def has_next_page # rubocop:disable Naming/PredicateName
+      def has_next_page
         raise NotImplementedError
       end
 
