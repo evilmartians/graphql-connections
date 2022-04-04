@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = "> 2.5"
 
   spec.add_runtime_dependency "activerecord", ">= 5"
-  spec.add_runtime_dependency "graphql", "~> 1.10"
+  spec.add_runtime_dependency "graphql", [">= 1.10", "< 3.0"]
 
   spec.add_development_dependency "bundler", ">= 1.16"
   spec.add_development_dependency "factory_bot_rails", "~> 6.2"
