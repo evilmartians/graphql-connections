@@ -5,7 +5,6 @@ module GraphQL
     module Keyset
       # Implements keyset pagination by two fields with asc order
       class Asc < ::GraphQL::Connections::Keyset::Base
-        # rubocop:disable Naming/PredicateName, Metrics/AbcSize, Metrics/MethodLength
         def has_previous_page
           if last
             nodes.any? &&
@@ -47,7 +46,7 @@ module GraphQL
 
         private
 
-        def limited_relation # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+        def limited_relation
           scope = sliced_relation
           nodes = []
 
@@ -66,14 +65,14 @@ module GraphQL
           nodes
         end
 
-        def sliced_relation_after(relation) # rubocop:disable Metrics/AbcSize
+        def sliced_relation_after(relation)
           relation
             .where(arel_table[field_key].eq(after_cursor_date))
             .where(arel_table[primary_key].gt(after_cursor_primary_key))
             .or(relation.where(arel_table[field_key].gt(after_cursor_date)))
         end
 
-        def sliced_relation_before(relation) # rubocop:disable Metrics/AbcSize
+        def sliced_relation_before(relation)
           relation
             .where(arel_table[field_key].eq(before_cursor_date))
             .where(arel_table[primary_key].lt(before_cursor_primary_key))
