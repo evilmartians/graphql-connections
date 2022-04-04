@@ -10,7 +10,7 @@ module GraphQL
         super(*args, **kwargs)
       end
 
-      def has_previous_page # rubocop:disable Naming/PredicateName, Metrics/AbcSize
+      def has_previous_page
         if last
           nodes.any? && items.where(arel_table[primary_key].lt(nodes.first[primary_key])).exists?
         elsif after
@@ -20,7 +20,7 @@ module GraphQL
         end
       end
 
-      def has_next_page # rubocop:disable Naming/PredicateName, Metrics/AbcSize
+      def has_next_page
         if first
           nodes.any? && items.where(arel_table[primary_key].gt(nodes.last[primary_key])).exists?
         elsif before
@@ -38,7 +38,7 @@ module GraphQL
 
       private
 
-      def limited_relation # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
+      def limited_relation
         scope = sliced_relation
         nodes = []
 
@@ -59,7 +59,7 @@ module GraphQL
         nodes
       end
 
-      def sliced_relation # rubocop:disable Metrics/AbcSize
+      def sliced_relation
         items
           .yield_self { |s| after ? s.where(arel_table[primary_key].gt(after_cursor)) : s }
           .yield_self { |s| before ? s.where(arel_table[primary_key].lt(before_cursor)) : s }

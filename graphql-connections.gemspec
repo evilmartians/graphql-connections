@@ -4,7 +4,6 @@ lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "graphql/connections/version"
 
-# rubocop:disable Metrics/BlockLength
 Gem::Specification.new do |spec|
   spec.name = "graphql-connections"
   spec.version = GraphQL::Paging::VERSION
