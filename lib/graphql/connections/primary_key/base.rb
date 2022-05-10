@@ -5,6 +5,9 @@ module GraphQL
     module PrimaryKey
       # Base class for PrimaryKey pagination implementations
       class Base < ::GraphQL::Connections::Base
+        class AbstractMethodError < StandardError
+        end
+
         COMPARABLE_METHODS = %i[
           gt lt lteq gteq
         ].freeze
@@ -85,19 +88,19 @@ module GraphQL
         end
 
         def page_comparable_method(query_type:, page_type:)
-          raise NotImplementedError
+          raise AbstractMethodError.new("method \"#{__method__}\" should be implemented in #{self.class.name} class")
         end
 
         def first_limited_sorted_table
-          raise NotImplementedError
+          raise AbstractMethodError.new("method \"#{__method__}\" should be implemented in #{self.class.name} class")
         end
 
         def last_limited_sorted_table
-          raise NotImplementedError
+          raise AbstractMethodError.new("method \"#{__method__}\" should be implemented in #{self.class.name} class")
         end
 
         def sliced_comparable_method(type)
-          raise NotImplementedError
+          raise AbstractMethodError.new("method \"#{__method__}\" should be implemented in #{self.class.name} class")
         end
       end
     end
