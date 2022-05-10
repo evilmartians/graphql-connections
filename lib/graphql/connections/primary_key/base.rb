@@ -83,6 +83,22 @@ module GraphQL
         def sliced_items(items:, cursor:, type:)
           items.where(arel_table[primary_key].send(sliced_comparable_method(type), cursor))
         end
+
+        def page_comparable_method(query_type:, page_type:)
+          raise NotImplementedError
+        end
+
+        def first_limited_sorted_table
+          raise NotImplementedError
+        end
+
+        def last_limited_sorted_table
+          raise NotImplementedError
+        end
+
+        def sliced_comparable_method(type)
+          raise NotImplementedError
+        end
       end
     end
   end
