@@ -5,9 +5,6 @@ module GraphQL
     module PrimaryKey
       # Base class for PrimaryKey pagination implementations
       class Base < ::GraphQL::Connections::Base
-        class AbstractMethodError < StandardError
-        end
-
         COMPARABLE_METHODS = %i[
           gt lt lteq gteq
         ].freeze
