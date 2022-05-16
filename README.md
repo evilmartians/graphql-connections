@@ -59,7 +59,9 @@ Also, you can pass the `:desc` option to reverse the relation:
 GraphQL::Connections::Stable.new(Message.all, keys: %w[name id], desc: true)
 ```
 
-**NOTE:** `:desc` option is not implemented for stable connections with `:primary_key` passed; if you need it—use keyset pagination or implement `:desc` option for us 🙂.
+```ruby
+GraphQL::Connections::Stable.new(Message.all, primary_key: :created_at, desc: true)
+```
 
 Also, you can disable opaque cursors by setting `opaque_cursor` param:
 
