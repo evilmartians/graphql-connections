@@ -46,10 +46,16 @@ module GraphQL
 
         private
 
+        def page_comparable_method(query_type:, page_type:)
+          self.class::PAGE_COMPARABLE_METHODS.fetch(page_type).fetch(query_type)
+        end
+
         def items_exist?(type:, search:, page_type:)
           comparable_method = page_comparable_method(query_type: type, page_type: page_type)
 
-          return if COMPARABLE_METHODS.exclude?(comparable_method)
+          if COMPARABLE_METHODS.exclude?(comparable_method)
+            raise ArgumentError.new("Unknown #{comparable_method} comparable type. Allowed #{COMPARABLE_METHODS.join(", ")}")
+          end
 
           items.where(arel_table[primary_key].send(comparable_method, search)).exists?
         end
@@ -87,20 +93,16 @@ module GraphQL
           items.where(arel_table[primary_key].send(sliced_comparable_method(type), cursor))
         end
 
-        def page_comparable_method(query_type:, page_type:)
-          raise AbstractMethodError.new("method \"#{__method__}\" should be implemented in #{self.class.name} class")
+        def sliced_comparable_method(type)
+          self.class::SLICED_COMPARABLE_METHODS.fetch(type.to_sym)
         end
 
         def first_limited_sorted_table
-          raise AbstractMethodError.new("method \"#{__method__}\" should be implemented in #{self.class.name} class")
+          raise NotImplementedError.new("method \"#{__method__}\" should be implemented in #{self.class.name} class")
         end
 
         def last_limited_sorted_table
-          raise AbstractMethodError.new("method \"#{__method__}\" should be implemented in #{self.class.name} class")
-        end
-
-        def sliced_comparable_method(type)
-          raise AbstractMethodError.new("method \"#{__method__}\" should be implemented in #{self.class.name} class")
+          raise NotImplementedError.new("method \"#{__method__}\" should be implemented in #{self.class.name} class")
         end
       end
     end

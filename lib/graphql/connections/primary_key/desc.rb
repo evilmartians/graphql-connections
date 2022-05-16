@@ -5,15 +5,17 @@ module GraphQL
     # Implements pagination by one field with desc order
     module PrimaryKey
       class Desc < Base
+        PAGE_COMPARABLE_METHODS = {
+          previous: {query: :gt, cursor: :gteq},
+          next: {query: :lt, cursor: :lteq}
+        }.freeze
+
+        SLICED_COMPARABLE_METHODS = {
+          after: :lt,
+          before: :gt
+        }.freeze
+
         private
-
-        def page_comparable_method(query_type:, page_type:)
-          if page_type == :previous
-            return query_type == :query ? :gt : :gteq
-          end
-
-          query_type == :query ? :lt : :lteq
-        end
 
         def first_limited_sorted_table
           arel_table[primary_key].desc
@@ -21,10 +23,6 @@ module GraphQL
 
         def last_limited_sorted_table
           arel_table[primary_key].asc
-        end
-
-        def sliced_comparable_method(type)
-          type == :after ? :lt : :gt
         end
       end
     end
