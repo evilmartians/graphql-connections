@@ -19,7 +19,7 @@ module GraphQL
           if last
             nodes.any? && items_exist?(type: :query, search: nodes.first[primary_key], page_type: :previous)
           elsif after
-            items_exist?(type: :cursor, search: after_cursor, page_type: :previous)
+            nodes.any? && items_exist?(type: :cursor, search: after_cursor, page_type: :previous)
           else
             false
           end
@@ -27,9 +27,9 @@ module GraphQL
 
         def has_next_page
           if first
-            items_exist?(type: :query, search: nodes.last[primary_key], page_type: :next)
+            nodes.any? && items_exist?(type: :query, search: nodes.last[primary_key], page_type: :next)
           elsif before
-            items_exist?(type: :cursor, search: before_cursor, page_type: :next)
+            nodes.any? && items_exist?(type: :cursor, search: before_cursor, page_type: :next)
           else
             false
           end
