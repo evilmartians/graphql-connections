@@ -42,7 +42,7 @@ module GraphQL
             false
           end
         end
-        # rubocop:enable Naming/PredicateName, Metrics/AbcSize, Metrics/MethodLength
+        # rubocop:enable Naming/PredicateName
 
         def cursor_for(item)
           cursor = [item[field_key], item[primary_key]].map { |value| serialize(value) }.join(@separator)

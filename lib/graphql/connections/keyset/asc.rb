@@ -42,7 +42,7 @@ module GraphQL
             false
           end
         end
-        # rubocop:enable Naming/PredicateName, Metrics/AbcSize, Metrics/MethodLength
+        # rubocop:enable Naming/PredicateName
 
         private
 
@@ -82,3 +82,4 @@ module GraphQL
     end
   end
 end
+# rubocop:enable Metrics/AbcSize
