@@ -6,6 +6,7 @@
 /gemfiles/
 /pkg/
 /spec/reports/
+/spec/internal/tmp/
 /tmp/
 .pry_history
 .rspec_status
