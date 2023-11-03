@@ -1,6 +1,6 @@
 services:
   ruby:
-    image: ruby:${RUBY_IMAGE:-3.2}-bullseye
+    image: ruby:${RUBY_IMAGE:-2.6}-bullseye
     environment:
       HISTFILE: /app/.bash_history
       BUNDLE_PATH: /bundle

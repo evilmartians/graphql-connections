@@ -43,6 +43,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec-rails", "~> 6.0"
   spec.add_development_dependency "standard", "~> 1.1"
-  spec.add_development_dependency "test-prof", "~> 1.0"
+  spec.add_development_dependency "test-prof", "~> 1.0.0"
 end
 # rubocop:enable Metrics/BlockLength
