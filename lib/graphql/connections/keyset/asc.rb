@@ -42,10 +42,10 @@ module GraphQL
             false
           end
         end
-        # rubocop:enable Naming/PredicateName, Metrics/AbcSize, Metrics/MethodLength
 
         private
 
+        # standard:disable Metrics/AbcSize, Metrics/MethodLength
         def limited_relation
           scope = sliced_relation
           nodes = []
@@ -78,6 +78,7 @@ module GraphQL
             .where(arel_table[primary_key].lt(before_cursor_primary_key))
             .or(relation.where(arel_table[field_key].lt(before_cursor_date)))
         end
+        # standard:enable Metrics/AbcSize, Metrics/MethodLength
       end
     end
   end
