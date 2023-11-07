@@ -1,0 +1,69 @@
+name: Edge Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  schedule:
+    - cron: "10 4 * * */2"
+
+jobs:
+  edge-test:
+    runs-on: ubuntu-latest
+    env:
+      BUNDLE_JOBS: 4
+      BUNDLE_RETRY: 3
+      BUNDLE_GEMFILE: gemfiles/graphql_master.gemfile
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432
+      ELASTICSEARCH_URL: http://localhost:9200
+      CI: true
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: [ '3.0', '3.1', '3.2', head ]
+    services:
+      postgres:
+        image: postgres:13
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      elasticsearch:
+        image: elasticsearch:7.12.1
+        ports:
+          - 9200:9200
+        env:
+          ES_JAVA_OPTS: -Xms64m -Xmx256m
+          discovery.type: single-node
+          http.cors.enabled: "true"
+          bootstrap.memory_lock: "true"
+        options: >-
+          --health-cmd "curl http://localhost:9200/_cluster/health"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install system deps
+        run: |
+          sudo apt-get update
+          sudo apt-get -yqq install libpq-dev
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: Create DB
+        run: |
+          env PGPASSWORD=postgres createdb -h localhost -U postgres graphql_paging
+      - name: Run Standard commands
+        run: |
+          bundle exec standardrb
+      - name: Run RSpec
+        run: |
+          bundle exec rspec -f d --force-color
+
