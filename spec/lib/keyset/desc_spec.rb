@@ -26,6 +26,16 @@ describe GraphQL::Connections::Keyset::Desc do
       expect(connection.has_previous_page).to be false
       expect(connection.has_next_page).to be true
     end
+
+    context "with empty relation" do
+      let(:relation) { Message.none }
+
+      it "returns no nodes and has_previous_page and has_next_page are false" do
+        expect(nodes.size).to eq 0
+        expect(connection.has_previous_page).to be false
+        expect(connection.has_next_page).to be false
+      end
+    end
   end
 
   describe ":first param" do

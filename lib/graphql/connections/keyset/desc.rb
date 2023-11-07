@@ -42,8 +42,8 @@ module GraphQL
             false
           end
         end
-        # rubocop:enable Naming/PredicateName, Metrics/AbcSize, Metrics/MethodLength
 
+        # standard:disable Metrics/AbcSize, Metrics/MethodLength
         def cursor_for(item)
           cursor = [item[field_key], item[primary_key]].map { |value| serialize(value) }.join(@separator)
           cursor = encode(cursor) if opaque_cursor
@@ -85,6 +85,7 @@ module GraphQL
             .where(arel_table[primary_key].gt(before_cursor_primary_key))
             .or(relation.where(arel_table[field_key].gt(before_cursor_date)))
         end
+        # standard:disable Metrics/AbcSize, Metrics/MethodLength
       end
     end
   end

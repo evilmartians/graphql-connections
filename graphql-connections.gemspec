@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  spec.required_ruby_version = "> 2.5"
+  spec.required_ruby_version = "> 2.6"
 
   spec.add_runtime_dependency "activerecord", ">= 5"
   spec.add_runtime_dependency "graphql", [">= 1.10", "< 3.0"]
@@ -41,8 +41,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pg", "~> 1.2"
   spec.add_development_dependency "pry-byebug", "~> 3"
   spec.add_development_dependency "rake", "~> 13.0"
-  spec.add_development_dependency "rspec-rails", "~> 5.0"
+  spec.add_development_dependency "rspec-rails", "~> 6.0"
   spec.add_development_dependency "standard", "~> 1.1"
-  spec.add_development_dependency "test-prof", "~> 1.0"
+  spec.add_development_dependency "test-prof", "~> 1.0.0"
 end
 # rubocop:enable Metrics/BlockLength
